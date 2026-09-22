@@ -1,4 +1,4 @@
-const VERSION='workout-pwa-v2.0.2';
+const VERSION='workout-pwa-v2.0.3';
 const APP_CACHE=`${VERSION}-app`;
 const MEDIA_CACHE=`${VERSION}-media`;
 const APP_ASSETS=["./","./index.html","./styles.css","./manifest.webmanifest","./icon.svg","./app1.js","./programs.js","./app3.js","./app4.js","./dashboard.js","./app5.js","./app6.js","./app7a.js","./app7b.js","./app8.js"];
