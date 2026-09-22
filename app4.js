@@ -27,7 +27,7 @@ function renderHome(){
 }
 
 function settingsHTML(){
-  return `<div class="setting-row"><div><b>Звуковые сигналы</b><div class="small-note">Старт отдыха, последние 3 секунды, начало упражнения</div></div><button class="switch ${settings.sound?'on':''}" id="soundToggle" aria-label="Звук"></button></div>
+  return `<div class="setting-row"><div><b>Звуковые сигналы</b><div class="small-note">Старт отдыха, последние 3 секунды, начало упражнения. В беззвучном режиме iPhone сигналы могут не воспроизводиться.</div></div><button class="switch ${settings.sound?'on':''}" id="soundToggle" aria-label="Звук"></button></div>
   <div class="setting-row"><div><b>Громкость сигналов</b></div><input class="range" id="volumeRange" type="range" min="0" max="1" step="0.05" value="${settings.volume}"></div>
   <div class="setting-row"><div><b>Экран не гаснет</b><div class="small-note">Работает, если браузер поддерживает Screen Wake Lock</div></div><button class="switch ${settings.wake?'on':''}" id="wakeToggle" aria-label="Экран не гаснет"></button></div>`;
 }
