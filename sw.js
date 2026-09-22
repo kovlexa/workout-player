@@ -1,7 +1,7 @@
-const VERSION='workout-pwa-v1.0.6';
+const VERSION='workout-pwa-v2.0.0';
 const APP_CACHE=`${VERSION}-app`;
 const MEDIA_CACHE=`${VERSION}-media`;
-const APP_ASSETS=["./","./index.html","./styles.css","./manifest.webmanifest","./icon.svg","./app1.js","./app2.js","./app3.js","./app4.js","./app5.js","./app6.js","./app7a.js","./app7b.js","./app8.js"];
+const APP_ASSETS=["./","./index.html","./styles.css","./manifest.webmanifest","./icon.svg","./app1.js","./programs.js","./app3.js","./app4.js","./dashboard.js","./app5.js","./app6.js","./app7a.js","./app7b.js","./app8.js"];
 
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
