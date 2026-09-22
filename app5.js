@@ -15,16 +15,35 @@ function startWorkout(workout,opts={}){
   beep('next');
 }
 
+function restorePausedSession(){
+  if(!session?.paused) return;
+  const now=Date.now();
+  const pauseDuration=Math.max(0,now-(session.pauseStartedAt||now));
+  session.pausedTotalMs=(session.pausedTotalMs||0)+pauseDuration;
+  session.pauseStartedAt=null;
+  session.paused=false;
+  const seg=current();
+  if(seg && (seg.kind==='rest'||(seg.kind==='work'&&seg.type!=='reps'))){
+    const rem=session.pausedRemaining!=null ? session.pausedRemaining : (seg.durationSec||0);
+    session.segmentEndAt=now+rem*1000;
+  }
+  if(seg?.kind==='work' && seg.type==='reps' && session.segmentStartedAt){
+    session.segmentStartedAt += pauseDuration;
+  }
+  session.pausedRemaining=null;
+}
+
 function resumeSavedSession(){
   const saved=safeJSON(localStorage.getItem('workout-session')); if(!saved||saved.status!=='active')return renderHome();
   session=saved;
-  if(session.paused){ /* keep paused */ }
+  if(session.paused) restorePausedSession();
   else {
     const seg=current();
     if(seg && (seg.kind==='rest'||(seg.kind==='work'&&seg.type!=='reps')) && session.segmentEndAt==null){
       session.segmentEndAt=Date.now()+(seg.durationSec||0)*1000;
     }
   }
+  saveSession();
   ensureAudio(); if(settings.wake) requestWakeLock(); renderPlayer(); startTicker();
 }
 
