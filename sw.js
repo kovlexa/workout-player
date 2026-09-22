@@ -1,7 +1,7 @@
-const VERSION='workout-pwa-v1.0.5';
+const VERSION='workout-pwa-v1.0.6';
 const APP_CACHE=`${VERSION}-app`;
 const MEDIA_CACHE=`${VERSION}-media`;
-const APP_ASSETS=["./","./index.html","./styles.css","./manifest.webmanifest","./icon.svg","./app1.js","./app2.js","./app3.js","./app4.js","./app5.js","./app6.js","./app7a.js","./app7b.js"];
+const APP_ASSETS=["./","./index.html","./styles.css","./manifest.webmanifest","./icon.svg","./app1.js","./app2.js","./app3.js","./app4.js","./app5.js","./app6.js","./app7a.js","./app7b.js","./app8.js"];
 
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
@@ -21,7 +21,6 @@ self.addEventListener('fetch',event=>{
   const req=event.request;
   if(req.method!=='GET') return;
   const url=new URL(req.url);
-
   if(url.origin===self.location.origin){
     event.respondWith((async()=>{
       const cached=await caches.match(req);
@@ -37,7 +36,6 @@ self.addEventListener('fetch',event=>{
     })());
     return;
   }
-
   if(req.destination==='image'||req.destination==='video'){
     event.respondWith((async()=>{
       const cache=await caches.open(MEDIA_CACHE);
