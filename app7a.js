@@ -18,7 +18,12 @@ function showPauseOverlay(){
   if(document.querySelector('.pause-overlay'))return;
   const d=document.createElement('div');d.className='pause-overlay';d.innerHTML=`<div class="pause-card"><h2>Пауза</h2><p>Таймеры остановлены, прогресс сохранён.</p><button class="btn primary full" id="resumeOverlay">Продолжить</button><button class="btn full" style="margin-top:10px" id="homeOverlay">На главную</button></div>`;document.body.appendChild(d);
   d.querySelector('#resumeOverlay').onclick=resumeWorkout;
-  d.querySelector('#homeOverlay').onclick=()=>{saveSession();releaseWakeLock();renderHome()};
+  d.querySelector('#homeOverlay').onclick=()=>{
+    saveSession();
+    releaseWakeLock();
+    d.remove();
+    renderHome();
+  };
 }
 
 function tick(){
