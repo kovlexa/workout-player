@@ -39,6 +39,7 @@ function dashboardSummaryHTML(){
   const latest=p[0];
   return `<div class="dashboard-grid">
     <button class="dashboard-card" id="historyBtn"><span class="dashboard-icon">◷</span><div><b>История</b><small>${h.length ? `${h.length} тренировок · последняя ${formatDate(last.at)}` : 'Пока пусто'}</small></div><span>›</span></button>
+    <button class="dashboard-card" id="statsBtn"><span class="dashboard-icon">▥</span><div><b>Статистика</b><small>${h.length ? 'Частота, время и выполнение' : 'Появится после первой тренировки'}</small></div><span>›</span></button>
     <button class="dashboard-card" id="progressBtn"><span class="dashboard-icon">↗</span><div><b>Прогресс</b><small>${latest ? `Последняя запись ${formatDate(latest.date)}` : 'Вес, талия и контрольные тесты'}</small></div><span>›</span></button>
   </div>`;
 }
@@ -67,6 +68,7 @@ function bindDashboardHome(){
   document.getElementById('resumeBtn')?.addEventListener('click',resumeSavedSession);
   document.getElementById('discardBtn')?.addEventListener('click',()=>{localStorage.removeItem('workout-session');renderHome()});
   document.getElementById('historyBtn')?.addEventListener('click',renderHistory);
+  document.getElementById('statsBtn')?.addEventListener('click',renderStats);
   document.getElementById('progressBtn')?.addEventListener('click',renderProgress);
 }
 function renderHistory(){
@@ -106,4 +108,58 @@ function renderProgress(){
     if(entry.weight==null&&entry.waist==null&&entry.pullups==null&&entry.pushups==null&&!entry.notes){alert('Добавь хотя бы один показатель или комментарий.');return;}
     const log=getProgressLog();log.unshift(entry);log.sort((a,b)=>String(b.date).localeCompare(String(a.date)));saveProgressLog(log.slice(0,200));renderProgress();
   };
+}
+function startOfLocalDay(ts){
+  const d=new Date(ts); d.setHours(0,0,0,0); return d.getTime();
+}
+function renderStats(){
+  const items=getWorkoutHistory();
+  const now=Date.now();
+  const weekAgo=now-7*24*3600*1000;
+  const recent=items.filter(x=>x.at>=weekAgo);
+  const totalSec=items.reduce((s,x)=>s+(x.duration||0),0);
+  const recentSec=recent.reduce((s,x)=>s+(x.duration||0),0);
+  const completed=items.reduce((s,x)=>s+(x.sets||0),0);
+  const planned=items.reduce((s,x)=>s+(x.totalSets||0),0);
+  const completion=planned?Math.round(completed/planned*100):0;
+  const avg=items.length?Math.round(totalSec/items.length):0;
+  const counts={};
+  items.forEach(x=>{ const k=x.workoutTitle||x.workoutId||'Тренировка'; counts[k]=(counts[k]||0)+1; });
+  const maxCount=Math.max(1,...Object.values(counts));
+  const distribution=Object.entries(counts).length
+    ? Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([name,count])=>`<div class="stat-row"><div class="stat-row-head"><span>${esc(name)}</span><b>${count}</b></div><div class="mini-bar"><i style="width:${Math.round(count/maxCount*100)}%"></i></div></div>`).join('')
+    : '<div class="empty-state">Статистика появится после первой завершённой тренировки.</div>';
+
+  const weeks=[];
+  for(let i=3;i>=0;i--){
+    const end=now-i*7*24*3600*1000;
+    const start=end-7*24*3600*1000;
+    const n=items.filter(x=>x.at>start&&x.at<=end).length;
+    weeks.push({label:i===0?'эта':`−${i} нед.`,n});
+  }
+  const maxWeek=Math.max(1,...weeks.map(x=>x.n));
+  const weekBars=weeks.map(w=>`<div class="week-col"><div class="week-value">${w.n}</div><div class="week-bar-wrap"><i style="height:${Math.max(4,Math.round(w.n/maxWeek*100))}%"></i></div><span>${w.label}</span></div>`).join('');
+
+  const p=getProgressLog();
+  const latest=p[0], first=p[p.length-1];
+  const body = latest
+    ? `<div class="summary-grid"><div class="stat"><b>${latest.weight??'—'} кг</b><span>вес сейчас</span></div><div class="stat"><b>${latest.waist??'—'} см</b><span>талия сейчас</span></div></div>
+       ${p.length>1?`<div class="small-note">С первой записи: вес ${metricDelta(latest,first,'weight',' кг')}, талия ${metricDelta(latest,first,'waist',' см')}, подтягивания ${metricDelta(latest,first,'pullups')}, отжимания ${metricDelta(latest,first,'pushups')}.</div>`:''}`
+    : '<div class="empty-state">Контрольных замеров пока нет.</div>';
+
+  $app.innerHTML=`<main class="app">
+    <div class="subpage-head"><button class="icon-btn" id="backHome">←</button><div><div class="kicker">Автоматический учёт</div><h1>Статистика</h1></div></div>
+    <div class="metric-grid stats-metrics">
+      <div class="metric-card"><span>7 дней</span><b>${recent.length}</b><small>тренировок</small></div>
+      <div class="metric-card"><span>7 дней</span><b>${Math.round(recentSec/60)}</b><small>минут</small></div>
+      <div class="metric-card"><span>всего</span><b>${items.length}</b><small>тренировок</small></div>
+      <div class="metric-card"><span>выполнение</span><b>${completion}%</b><small>подходов</small></div>
+    </div>
+    <div class="card stats-card"><h2>Последние 4 недели</h2><div class="week-chart">${weekBars}</div></div>
+    <div class="card stats-card" style="margin-top:12px"><h2>По тренировкам</h2>${distribution}</div>
+    <div class="card stats-card" style="margin-top:12px"><h2>Средняя длительность</h2><div class="big-stat">${fmt(avg)}</div><div class="small-note">Считается по завершённым тренировкам.</div></div>
+    <div class="card stats-card" style="margin-top:12px"><h2>Контрольные показатели</h2>${body}<button class="btn full" id="openProgressFromStats" style="margin-top:12px">Открыть прогресс</button></div>
+  </main>`;
+  document.getElementById('backHome').onclick=renderHome;
+  document.getElementById('openProgressFromStats').onclick=renderProgress;
 }
