@@ -1,4 +1,4 @@
-const VERSION='workout-pwa-v2.0.5';
+const VERSION='workout-pwa-v2.1.0';
 const APP_CACHE=`${VERSION}-app`;
 const MEDIA_CACHE=`${VERSION}-media`;
 const APP_ASSETS=["./","./index.html","./styles.css","./manifest.webmanifest","./icon.svg","./app1.js","./programs.js","./app3.js","./app4.js","./dashboard.js","./app5.js","./app6.js","./app7a.js","./app7b.js","./app8.js"];
@@ -17,25 +17,32 @@ self.addEventListener('activate',event=>event.waitUntil((async()=>{
   await self.clients.claim();
 })()));
 
+self.addEventListener('message',event=>{
+  if(event.data==='SKIP_WAITING') self.skipWaiting();
+});
+
 self.addEventListener('fetch',event=>{
   const req=event.request;
   if(req.method!=='GET') return;
   const url=new URL(req.url);
+
   if(url.origin===self.location.origin){
     event.respondWith((async()=>{
-      const cached=await caches.match(req);
-      if(cached) return cached;
+      const cache=await caches.open(APP_CACHE);
       try{
-        const fresh=await fetch(req);
-        const cache=await caches.open(APP_CACHE);
-        cache.put(req,fresh.clone());
+        const fresh=await fetch(req,{cache:'no-store'});
+        if(fresh && fresh.ok) cache.put(req,fresh.clone());
         return fresh;
       }catch{
-        return caches.match('./index.html');
+        const cached=await cache.match(req);
+        if(cached) return cached;
+        if(req.mode==='navigate') return cache.match('./index.html');
+        throw new Error('Offline resource unavailable');
       }
     })());
     return;
   }
+
   if(req.destination==='image'||req.destination==='video'){
     event.respondWith((async()=>{
       const cache=await caches.open(MEDIA_CACHE);
