@@ -28,7 +28,7 @@ function cycleWorkoutCards(cycle){
       <div class="card-head"><div><h2>${esc(w.title)}</h2><div class="subtitle">${esc(w.subtitle)}</div></div><span class="pill green">≈ ${mins} мин</span></div>
       <div class="card-meta"><span class="pill">${workoutExerciseCount(w)} упражнений</span>${w.equipment.slice(0,3).map(e=>`<span class="pill">${esc(e)}</span>`).join('')}</div>
       <div class="actions"><button class="btn primary" data-start="${w.id}">Начать</button><button class="btn" data-preview="${w.id}">Список</button></div>
-      <details class="preview" id="preview-${w.id}"><summary>Посмотреть программу <span>⌄</span></summary><ul class="preview-list">${preview.map((x,i)=>`<li class="preview-item"><b>${i+1}. ${esc(x.n)}</b><span>${esc(x.t)}</span></li>`).join('')}</ul></details>
+      <div class="preview" id="preview-${w.id}" hidden><ul class="preview-list">${preview.map((x,i)=>`<li class="preview-item"><b>${i+1}. ${esc(x.n)}</b><span>${esc(x.t)}</span></li>`).join('')}</ul></div>
     </article>`;
   }).join('');
 }
@@ -64,7 +64,7 @@ function bindDashboardHome(){
   document.getElementById('settingsBtn').onclick=()=>document.getElementById('settingsPanel').classList.toggle('open');
   bindSettings();
   document.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>openStartOptions(b.dataset.start));
-  document.querySelectorAll('[data-preview]').forEach(b=>b.onclick=()=>{const d=document.getElementById(`preview-${b.dataset.preview}`);d.open=!d.open;});
+  document.querySelectorAll('[data-preview]').forEach(b=>b.onclick=()=>{const p=document.getElementById(`preview-${b.dataset.preview}`);const opening=p.hidden;p.hidden=!p.hidden;b.textContent=opening?'Скрыть':'Список';});
   document.getElementById('resumeBtn')?.addEventListener('click',resumeSavedSession);
   document.getElementById('discardBtn')?.addEventListener('click',()=>{localStorage.removeItem('workout-session');renderHome()});
   document.getElementById('historyBtn')?.addEventListener('click',renderHistory);
