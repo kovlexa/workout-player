@@ -1,0 +1,14 @@
+{
+  "name": "Тренировки",
+  "short_name": "Тренировки",
+  "description": "Персональный плеер домашних тренировок",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["fullscreen", "standalone"],
+  "background_color": "#0b0f12",
+  "theme_color": "#0b0f12",
+  "orientation": "portrait-primary",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
