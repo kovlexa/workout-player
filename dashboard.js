@@ -56,8 +56,6 @@ function renderHome(){
     ${dashboardSummaryHTML()}
     ${active ? `<section class="cycle-head"><div><div class="cycle-kicker">Текущий цикл</div><h2>${esc(active.title)}</h2><p>${esc(active.subtitle)}</p></div><span class="pill green">Активный</span></section><div class="workout-grid">${cycleWorkoutCards(active)}</div>` : ''}
     ${archived.length ? `<div class="section-label">Прошлые циклы</div>${archived.map(c=>`<details class="cycle-archive card"><summary><div><b>${esc(c.title)}</b><span>${esc(c.subtitle)}</span></div><span>⌄</span></summary><div class="workout-grid archive-grid">${cycleWorkoutCards(c)}</div></details>`).join('')}` : ''}
-    <div class="section-label">Медиа</div>
-    <div class="card"><div class="card-head"><div><h2 style="font-size:18px">Демонстрации упражнений</h2><div class="subtitle">Просмотренные материалы приложение пытается сохранить для офлайн-работы.</div></div></div><div class="actions"><button class="btn" id="sourcesBtn">Источники</button></div></div>
   </main>`;
   bindDashboardHome();
 }
@@ -68,7 +66,6 @@ function bindDashboardHome(){
   document.querySelectorAll('[data-preview]').forEach(b=>b.onclick=()=>{const d=document.getElementById(`preview-${b.dataset.preview}`);d.open=!d.open;});
   document.getElementById('resumeBtn')?.addEventListener('click',resumeSavedSession);
   document.getElementById('discardBtn')?.addEventListener('click',()=>{localStorage.removeItem('workout-session');renderHome()});
-  document.getElementById('sourcesBtn')?.addEventListener('click',showSources);
   document.getElementById('historyBtn')?.addEventListener('click',renderHistory);
   document.getElementById('progressBtn')?.addEventListener('click',renderProgress);
 }
