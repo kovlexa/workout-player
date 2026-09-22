@@ -6,7 +6,9 @@ function finishWorkout(){
   const completedMain=session.plan.filter(s=>s.kind==='work'&&s.phase!=='warmup'&&session.completedIds.includes(s.id));
   const byExercise={}; completedMain.forEach(s=>{byExercise[s.name]=(byExercise[s.name]||0)+1});
   const totalMain=session.plan.filter(s=>s.kind==='work'&&s.phase!=='warmup').length;
-  const summary={workoutId:workout.id,workoutTitle:workout.title,cycleId:workout.cycleId||null,duration,at:Date.now(),sets:completedMain.length,totalSets:totalMain,byExercise};\n  localStorage.setItem('workout-last-summary',JSON.stringify(summary));\n  if(typeof appendWorkoutHistory==='function') appendWorkoutHistory(summary);
+  const summary={workoutId:workout.id,workoutTitle:workout.title,cycleId:workout.cycleId||null,duration,at:Date.now(),sets:completedMain.length,totalSets:totalMain,byExercise};
+  localStorage.setItem('workout-last-summary',JSON.stringify(summary));
+  if(typeof appendWorkoutHistory==='function') appendWorkoutHistory(summary);
   localStorage.removeItem('workout-session');
   stopTicker(); releaseWakeLock();
   $app.innerHTML=`<main class="app complete"><div class="card complete-card"><div class="complete-icon">✓</div><h1>Тренировка завершена</h1><p>${esc(workout.title)}</p>
