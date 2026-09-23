@@ -26,7 +26,8 @@ function renderHome(){
 
 function settingsHTML(){
   return `<div class="setting-row"><div><b>Звуковые сигналы</b><div class="small-note">Старт отдыха, последние 3 секунды, начало упражнения. В беззвучном режиме iPhone сигналы могут не воспроизводиться.</div></div><button class="switch ${settings.sound?'on':''}" id="soundToggle" aria-label="Звук"></button></div>
-  <div class="setting-row"><div><b>Громкость сигналов</b></div><input class="range" id="volumeRange" type="range" min="0" max="1" step="0.05" value="${settings.volume}"></div>
+  <div class="setting-row"><div><b>Громкость сигналов</b><div class="small-note">Внутренняя громкость приложения</div></div><input class="range" id="volumeRange" type="range" min="0" max="1" step="0.05" value="${settings.volume}"></div>
+  <div class="setting-row"><div><b>Проверка сигнала</b><div class="small-note">Запусти музыку и проверь, слышно ли переход</div></div><button class="btn" id="soundTest">Проверить</button></div>
   <div class="setting-row"><div><b>Экран не гаснет</b><div class="small-note">Работает, если браузер поддерживает Screen Wake Lock</div></div><button class="switch ${settings.wake?'on':''}" id="wakeToggle" aria-label="Экран не гаснет"></button></div>
   <div class="setting-row"><div><b>Медиа и источники</b><div class="small-note">Список использованных изображений и видео техники</div></div><button class="btn" id="sourcesSettings">Открыть</button></div>`;
 }
@@ -34,6 +35,7 @@ function settingsHTML(){
 function bindSettings(){
   const st=document.getElementById('soundToggle'); if(st) st.onclick=()=>{settings.sound=!settings.sound;saveSettings();beep('start');rerenderSettings()};
   const vr=document.getElementById('volumeRange'); if(vr) vr.oninput=e=>{settings.volume=+e.target.value;saveSettings()};
+  const test=document.getElementById('soundTest'); if(test) test.onclick=()=>beep('next');
   const wt=document.getElementById('wakeToggle'); if(wt) wt.onclick=async()=>{settings.wake=!settings.wake;saveSettings(); if(settings.wake) await requestWakeLock(); else await releaseWakeLock(); rerenderSettings();};
   const ss=document.getElementById('sourcesSettings'); if(ss) ss.onclick=showSources;
 }
