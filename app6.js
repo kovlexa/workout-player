@@ -11,20 +11,28 @@ function renderPlayer(){
     : (seg.type==='reps'
       ? `<button class="btn primary main-action" id="doneSet">Подход выполнен</button>`
       : `<button class="btn main-action" id="skipTimed">Завершить раньше</button>`);
+  const restMedia = isRest && next ? renderMedia(next.media) : '';
+  const restGuide = isRest && next ? `<div class="rest-guide">
+    ${next.muscles?`<div><span>Мышцы</span><b>${esc(next.muscles)}</b></div>`:''}
+    ${next.purpose?`<div><span>Зачем</span><b>${esc(next.purpose)}</b></div>`:''}
+    ${next.tempo?`<div><span>Темп</span><b>${esc(next.tempo)}</b></div>`:''}
+    ${next.cue?`<div><span>Техника</span><b>${esc(next.cue)}</b></div>`:''}
+  </div>` : '';
 
   $app.innerHTML=`<main class="app player ${isRest?'rest-screen':''}">
     <div class="player-head"><div class="head-left"><div class="kicker">${esc(session.workoutTitle)}</div><div class="player-title">${isRest?'Отдых':esc(seg.name)}</div></div></div>
     <div class="progress-wrap"><div class="progress-bar" style="width:${progressPercent()}%"></div></div>
-    ${isRest?'':renderMedia(seg.media)}
     <section class="exercise-box">
       <div class="phase-badge ${isRest?'rest':''}">${phaseText(seg)}</div>
       <h1 class="exercise-name">${isRest?'ОТДЫХ':esc(seg.name)}</h1>
       <div class="setline">${isRest ? esc(seg.restLabel||'') : `${seg.phase==='warmup'?'':`Подход ${seg.set} из ${seg.totalSets}`}`}</div>
       <div class="target">${esc(target||'')}</div>
       <div class="timer ${(!isRest&&seg.type==='reps')?'countup':''}" id="bigTimer">${timerValue}</div>
-      <div class="cue" id="cueText">${isRest ? (next?`Следующее: ${esc(next.name)}`:'Последний этап') : esc(seg.cue||'')}</div>
+      <div class="cue" id="cueText">${isRest ? (next?'Подготовься к следующему подходу':'Последний этап') : esc(seg.cue||'')}</div>
     </section>
-    <div class="next-card"><span>${isRest?'После отдыха':'Далее'}</span><b>${next?`${esc(next.name)}${next.phase==='warmup'?'':` · ${next.set}/${next.totalSets}`}`:'Финиш'}</b></div>
+    ${restMedia}
+    ${restGuide}
+    ${isRest?'':`<div class="next-card"><span>Далее</span><b>${next?`${esc(next.name)}${next.phase==='warmup'?'':` · ${next.set}/${next.totalSets}`}`:'Финиш'}</b></div>`}
     <div class="stats"><div class="stat"><b>${displayWork.exerciseNo||'–'} / ${displayWork.totalExercises||workoutExerciseCount(WORKOUTS[session.workoutId])}</b><span>упражнение</span></div><div class="stat"><b id="elapsedStat">${fmt(elapsedSec())}</b><span>прошло</span></div><div class="stat"><b id="remainStat">≈ ${fmt(remainingEstimate())}</b><span>осталось</span></div></div>
     ${mainAction}
     <div class="control-row"><button class="btn" id="backBtn">← Назад</button><button class="btn" id="pauseBtn">Пауза</button><button class="btn danger" id="finishBtn">Завершить</button></div>
