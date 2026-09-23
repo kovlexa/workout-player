@@ -44,19 +44,17 @@ const MEDIA = {
     videoUrl: 'https://www.youtube.com/results?search_query=band+pull+apart+proper+form'
   },
   gobletSquat: {
-    type: 'video',
-    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Kettlebell_Goblet_Squat.webm',
-    mp4: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c3/Kettlebell_Goblet_Squat.webm/Kettlebell_Goblet_Squat.webm.360p.mp4',
-    source: 'Taco Fleur · Wikimedia Commons · CC BY-SA 4.0',
-    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Kettlebell_Goblet_Squat.webm',
+    type: 'image',
+    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/U.S._Army_Capt._Nathaniel_Sebren%2C_the_commander_of_the_189th_Support_Battalion%27s_249th_Quartermaster_Company%2C_squats_with_a_kettlebell_during_a_CrossFit_workout_at_Fort_Bragg%2C_N.C.%2C_April_11%2C_2013_130411-A-QD996-004.jpg',
+    source: 'U.S. Army / Sgt. Amanda Tucker · Wikimedia Commons · public domain',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:U.S._Army_Capt._Nathaniel_Sebren,_the_commander_of_the_189th_Support_Battalion%27s_249th_Quartermaster_Company,_squats_with_a_kettlebell_during_a_CrossFit_workout_at_Fort_Bragg,_N.C.,_April_11,_2013_130411-A-QD996-004.jpg',
     videoUrl: 'https://www.youtube.com/watch?v=JxhPHvR88rw'
   },
   pullUp: {
-    type: 'video',
-    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Pull-ups_-_exercise_demonstration_video.webm',
-    mp4: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/1/15/Pull-ups_-_exercise_demonstration_video.webm/Pull-ups_-_exercise_demonstration_video.webm.360p.mp4',
-    source: 'FitnessScape · Wikimedia Commons · CC BY 3.0',
-    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Pull-ups_-_exercise_demonstration_video.webm',
+    type: 'image',
+    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/TEB_Pull-ups.png',
+    source: 'DiMer16 · Wikimedia Commons · CC BY-SA 4.0',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:TEB_Pull-ups.png',
     videoUrl: 'https://www.youtube.com/watch?v=9yVGh3XbJ34'
   },
   pushUp: {
