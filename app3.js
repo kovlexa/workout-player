@@ -24,10 +24,12 @@ function buildPlan(workout, opts={}, withMeta=true){
   const plan=[];
   let exOrder=0;
   const addWork=(ex,phase,set,totalSets,exerciseNo,totalExercises)=>{
+    const info=(typeof EXERCISE_INFO!=='undefined' && EXERCISE_INFO[ex.media]) ? EXERCISE_INFO[ex.media] : {};
     plan.push({
       kind:'work', phase, id:`${ex.id}-s${set}`, exerciseId:ex.id, name:ex.name, set, totalSets,
       target:ex.target, type:ex.type, durationSec:ex.durationSec||null, sideSwitchAt:ex.sideSwitchAt||null,
-      media:ex.media, cue:ex.cue||'', restSec:ex.restSec||0, restLabel:ex.restLabel||'', exerciseNo,totalExercises
+      media:ex.media, cue:ex.cue||'', muscles:ex.muscles||info.muscles||'', purpose:ex.purpose||info.purpose||'',
+      tempo:ex.tempo||info.tempo||'', restSec:ex.restSec||0, restLabel:ex.restLabel||'', exerciseNo,totalExercises
     });
   };
   const totalExercises=workoutExerciseCount(workout);
