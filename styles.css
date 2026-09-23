@@ -182,3 +182,10 @@ a{color:inherit}
 .week-bar-wrap i{display:block;width:100%;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:8px;min-height:4px}
 .week-col span{font-size:10px;color:var(--muted)}
 .big-stat{font-size:36px;font-weight:850;letter-spacing:-.03em}
+
+/* Rest screen: preview the next exercise while the timer stays visible first */
+.rest-screen .media{display:grid;margin:4px 2px 10px;aspect-ratio:16/9}
+.rest-guide{margin:0 2px 10px;background:#11181c;border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;gap:10px}
+.rest-guide>div{display:grid;gap:3px}
+.rest-guide span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}
+.rest-guide b{font-size:13px;line-height:1.38;color:#dce6ea;font-weight:650}
