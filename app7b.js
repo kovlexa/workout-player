@@ -27,8 +27,26 @@ function ensureAudio(){
 }
 function beep(type='next'){
   if(!settings.sound||settings.volume<=0)return; ensureAudio(); if(!audioCtx)return;
-  const cfg={rest:[420,.10],count:[720,.07],next:[900,.15],switch:[610,.12],finish:[980,.22],start:[760,.1]}[type]||[800,.1];
-  const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sine';o.frequency.value=cfg[0];g.gain.value=Math.max(.0001,settings.volume*.18);o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+cfg[1]);o.stop(audioCtx.currentTime+cfg[1]+.02);
+  const patterns={
+    rest:[[520,0,.18],[420,.20,.20]],
+    count:[[1080,0,.16]],
+    next:[[880,0,.18],[1180,.20,.24]],
+    switch:[[680,0,.18],[1040,.20,.20]],
+    finish:[[760,0,.18],[980,.20,.18],[1260,.40,.30]],
+    start:[[900,0,.18],[1120,.20,.20]]
+  };
+  const seq=patterns[type]||patterns.next;
+  const master=Math.max(.02,Math.min(1,settings.volume))*.62;
+  const t0=audioCtx.currentTime+.01;
+  seq.forEach(([freq,delay,duration])=>{
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    const t=t0+delay;
+    o.type='triangle'; o.frequency.setValueAtTime(freq,t);
+    g.gain.setValueAtTime(master,t);
+    g.gain.exponentialRampToValueAtTime(.0001,t+duration);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t+duration+.03);
+  });
 }
 
 async function requestWakeLock(){
